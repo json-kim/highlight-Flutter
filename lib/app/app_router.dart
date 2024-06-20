@@ -16,17 +16,31 @@ final appRouter = GoRouter(
   initialLocation: Routes.list,
 );
 
-@TypedShellRoute<MainRouteData>(
-  routes: <TypedRoute<RouteData>>[
-    TypedGoRoute<ListRouteData>(path: Routes.list),
-    TypedGoRoute<PhotosRouteData>(path: Routes.photos),
-    TypedGoRoute<ProfileRouteData>(path: Routes.profile),
-  ],
-)
-class MainRouteData extends ShellRouteData {
+@TypedStatefulShellRoute<MainRouteData>(
+    branches: <TypedStatefulShellBranch<StatefulShellBranchData>>[
+      TypedStatefulShellBranch(
+        routes: <TypedRoute<RouteData>>[
+          TypedGoRoute<ListRouteData>(path: Routes.list),
+        ],
+      ),
+      TypedStatefulShellBranch(
+        routes: [
+          TypedGoRoute<PhotosRouteData>(path: Routes.photos),
+        ],
+      ),
+      TypedStatefulShellBranch(
+        routes: [
+          TypedGoRoute<ProfileRouteData>(path: Routes.profile),
+        ],
+      ),
+    ])
+class MainRouteData extends StatefulShellRouteData {
+  const MainRouteData();
+
   @override
-  Widget builder(BuildContext context, GoRouterState state, Widget navigator) {
-    return MainScreen(child: navigator);
+  Widget builder(BuildContext context, GoRouterState state,
+      StatefulNavigationShell navigationShell) {
+    return MainScreen(navigationShell: navigationShell);
   }
 }
 
