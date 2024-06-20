@@ -10,30 +10,42 @@ List<RouteBase> get $appRoutes => [
       $mainRouteData,
     ];
 
-RouteBase get $mainRouteData => ShellRouteData.$route(
+RouteBase get $mainRouteData => StatefulShellRouteData.$route(
       factory: $MainRouteDataExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: '/list',
-          factory: $ListRouteDataExtension._fromState,
+      branches: [
+        StatefulShellBranchData.$branch(
+          routes: [
+            GoRouteData.$route(
+              path: '/list',
+              factory: $ListRouteDataExtension._fromState,
+            ),
+          ],
         ),
-        GoRouteData.$route(
-          path: '/photos',
-          factory: $PhotosRouteDataExtension._fromState,
+        StatefulShellBranchData.$branch(
+          routes: [
+            GoRouteData.$route(
+              path: '/photos',
+              factory: $PhotosRouteDataExtension._fromState,
+            ),
+          ],
         ),
-        GoRouteData.$route(
-          path: '/profile',
-          factory: $ProfileRouteDataExtension._fromState,
+        StatefulShellBranchData.$branch(
+          routes: [
+            GoRouteData.$route(
+              path: '/profile',
+              factory: $ProfileRouteDataExtension._fromState,
+            ),
+          ],
         ),
       ],
     );
 
 extension $MainRouteDataExtension on MainRouteData {
-  static MainRouteData _fromState(GoRouterState state) => MainRouteData();
+  static MainRouteData _fromState(GoRouterState state) => const MainRouteData();
 }
 
 extension $ListRouteDataExtension on ListRouteData {
-  static ListRouteData _fromState(GoRouterState state) => ListRouteData();
+  static ListRouteData _fromState(GoRouterState state) => const ListRouteData();
 
   String get location => GoRouteData.$location(
         '/list',
@@ -50,7 +62,8 @@ extension $ListRouteDataExtension on ListRouteData {
 }
 
 extension $PhotosRouteDataExtension on PhotosRouteData {
-  static PhotosRouteData _fromState(GoRouterState state) => PhotosRouteData();
+  static PhotosRouteData _fromState(GoRouterState state) =>
+      const PhotosRouteData();
 
   String get location => GoRouteData.$location(
         '/photos',
@@ -67,7 +80,8 @@ extension $PhotosRouteDataExtension on PhotosRouteData {
 }
 
 extension $ProfileRouteDataExtension on ProfileRouteData {
-  static ProfileRouteData _fromState(GoRouterState state) => ProfileRouteData();
+  static ProfileRouteData _fromState(GoRouterState state) =>
+      const ProfileRouteData();
 
   String get location => GoRouteData.$location(
         '/profile',
