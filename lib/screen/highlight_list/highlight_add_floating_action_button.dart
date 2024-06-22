@@ -8,7 +8,9 @@ class HighlightAddFloatingActionButton extends StatelessWidget {
     return RepaintBoundary(
       child: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {},
+        onPressed: () {
+          // TODO: 작성 페이지로 이동
+        },
       ),
     );
   }
