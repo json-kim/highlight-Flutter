@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:highlight_flutter/core/image/file_image_data.dart';
 import 'package:highlight_flutter/core/image/image_data.dart';
-import 'package:highlight_flutter/screen/common/error_image.dart';
 
 class PhotoGridView extends StatelessWidget {
   const PhotoGridView({super.key});
