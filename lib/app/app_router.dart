@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highlight_flutter/screen/highlight_list/highlight_list_screen.dart';
 import 'package:highlight_flutter/screen/main/main_screen.dart';
+import 'package:highlight_flutter/screen/photo_grid/photo_grid_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -59,10 +60,7 @@ class PhotosRouteData extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const NoTransitionPage(
-        child: Scaffold(
-      body: Text('포토'),
-    ));
+    return const NoTransitionPage(child: PhotoGridScreen());
   }
 }
 
