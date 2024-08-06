@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
 
 class MenuData {
   const MenuData({
@@ -16,17 +16,17 @@ class MenuData {
     MenuData(
       label: '백업하기',
       icon: Icons.file_copy,
-      route: 'route',
+      route: Routes.backup,
     ),
     MenuData(
       label: '초기화하기',
       icon: Icons.restore,
-      route: 'route',
+      route: Routes.reset,
     ),
     MenuData(
       label: '버전정보',
       icon: Icons.settings,
-      route: 'route',
+      route: Routes.version,
     ),
   ];
 }

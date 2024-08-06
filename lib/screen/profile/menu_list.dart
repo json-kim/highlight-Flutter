@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:highlight_flutter/const/menu/menu_data.dart';
 
 class MenuList extends StatelessWidget {
@@ -21,12 +22,16 @@ class MenuListItem extends StatelessWidget {
 
   final MenuData menuData;
 
+  void goPage(BuildContext context, String route) {
+    context.push('/$route');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
         onTap: () {
-          // TODO: 메뉴별 화면 이동
+          goPage(context, menuData.route);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
