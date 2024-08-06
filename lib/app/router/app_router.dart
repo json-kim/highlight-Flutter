@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:highlight_flutter/screen/highlight_edit/highlight_edit_screen.dart';
 import 'package:highlight_flutter/screen/highlight_list/highlight_list_screen.dart';
 import 'package:highlight_flutter/screen/init/init_screen.dart';
 import 'package:highlight_flutter/screen/main/main_screen.dart';
@@ -19,6 +20,7 @@ abstract class Routes {
   static const backup = 'backup';
   static const reset = 'reset';
   static const version = 'version';
+  static const edit = 'edit';
 }
 
 final appRouter = GoRouter(
@@ -47,6 +49,7 @@ final appRouter = GoRouter(
             ],
           ),
         ]),
+    TypedGoRoute<EditRouteData>(path: Routes.edit),
     TypedGoRoute<BackupRouteData>(path: Routes.backup),
     TypedGoRoute<ResetRouteData>(path: Routes.reset),
     TypedGoRoute<VersionRouteData>(path: Routes.version),
@@ -122,5 +125,14 @@ class VersionRouteData extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return VersionPage();
+  }
+}
+
+class EditRouteData extends GoRouteData {
+  const EditRouteData();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(child: HighlightEditScreen());
   }
 }
