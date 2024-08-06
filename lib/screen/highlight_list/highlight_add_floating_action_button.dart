@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
 
 class HighlightAddFloatingActionButton extends StatelessWidget {
   const HighlightAddFloatingActionButton({super.key});
@@ -9,7 +10,7 @@ class HighlightAddFloatingActionButton extends StatelessWidget {
       child: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          // TODO: 작성 페이지로 이동
+          const EditRouteData().push(context);
         },
       ),
     );

@@ -44,6 +44,10 @@ RouteBase get $sampleMainRouteData => GoRouteData.$route(
           ],
         ),
         GoRouteData.$route(
+          path: 'edit',
+          factory: $EditRouteDataExtension._fromState,
+        ),
+        GoRouteData.$route(
           path: 'backup',
           factory: $BackupRouteDataExtension._fromState,
         ),
@@ -121,6 +125,23 @@ extension $ProfileRouteDataExtension on ProfileRouteData {
 
   String get location => GoRouteData.$location(
         '/profile',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $EditRouteDataExtension on EditRouteData {
+  static EditRouteData _fromState(GoRouterState state) => const EditRouteData();
+
+  String get location => GoRouteData.$location(
+        '/edit',
       );
 
   void go(BuildContext context) => context.go(location);
