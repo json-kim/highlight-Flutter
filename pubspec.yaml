@@ -46,6 +46,9 @@ dependencies:
   # 버전 정보
   package_info_plus: 8.0.0
 
+  # 컬러 선택
+  flex_color_picker: ^3.5.1
+
 
 dev_dependencies:
   flutter_test:
