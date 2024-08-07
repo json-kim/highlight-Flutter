@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:highlight_flutter/screen/highlight_edit/color_select_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/date_select_bar.dart';
+import 'package:highlight_flutter/screen/highlight_edit/title_field_bar.dart';
 
 class HighlightEditScreen extends StatelessWidget {
   const HighlightEditScreen({super.key});
@@ -14,6 +15,7 @@ class HighlightEditScreen extends StatelessWidget {
         children: const [
           DateSelectBar(),
           ColorSelectBar(),
+          TitleFieldBar(),
         ],
       ),
     );
