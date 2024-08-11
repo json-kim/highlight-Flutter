@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/const/highlight/highlight_data.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_title_provider.dart';
 
 class TitleFieldBar extends ConsumerWidget {
   const TitleFieldBar({super.key});
-
-  static const maxTitleLength = 20;
 
   static const titleTextStyle = TextStyle(fontSize: 14);
 
@@ -23,7 +22,7 @@ class TitleFieldBar extends ConsumerWidget {
             style: titleTextStyle,
             cursorWidth: 1,
             maxLines: 1,
-            maxLength: maxTitleLength,
+            maxLength: HighlightData.maxTitleLength,
             onChanged: (value) =>
                 ref.watch(currentTitleProvider.notifier).state = value,
           )),
