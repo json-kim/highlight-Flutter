@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/const/highlight/highlight_data.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_content_provider.dart';
 
 class ContentFieldBar extends ConsumerWidget {
   const ContentFieldBar({super.key});
-
-  static const maxContentLength = 1000;
 
   static const contentTextStyle = TextStyle(fontSize: 14);
 
@@ -26,7 +25,7 @@ class ContentFieldBar extends ConsumerWidget {
               maxLines: null,
               expands: true,
               cursorWidth: 1,
-              maxLength: maxContentLength,
+              maxLength: HighlightData.maxContentLength,
               onChanged: (value) =>
                   ref.watch(currentContentProvider.notifier).state = value,
             ),
