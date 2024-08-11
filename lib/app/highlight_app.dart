@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlight_flutter/app/router/app_router.dart';
 import 'package:highlight_flutter/app/provider/provider_logger.dart';
+import 'package:highlight_flutter/app/theme/light_theme.dart';
 
 class HighlightApp extends StatelessWidget {
   const HighlightApp({super.key});
@@ -14,10 +15,7 @@ class HighlightApp extends StatelessWidget {
       ],
       child: MaterialApp.router(
         title: 'Highlight',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        theme: lightTheme,
         routerConfig: appRouter,
       ),
     );
