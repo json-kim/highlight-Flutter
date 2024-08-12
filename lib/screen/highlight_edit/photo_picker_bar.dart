@@ -6,8 +6,15 @@ import 'package:highlight_flutter/const/highlight/highlight_data.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_picked_photos_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
-class PhotoPickerBar extends ConsumerWidget {
+class PhotoPickerBar extends ConsumerStatefulWidget {
   const PhotoPickerBar({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _PhotoPickerBarState();
+}
+
+class _PhotoPickerBarState extends ConsumerState<PhotoPickerBar> {
+  final ScrollController _scrollController = ScrollController();
 
   bool couldPickMorePhotos(List<XFile> photos, int maxCount) {
     if (photos.length == maxCount) {
@@ -20,16 +27,23 @@ class PhotoPickerBar extends ConsumerWidget {
   bool shouldBuildAddWidget(
       List<XFile> photos, int maxCount, int currentCount) {
     final couldPickMore = couldPickMorePhotos(photos, maxCount);
-
-    if (maxCount == currentCount && couldPickMore) {
-      return false;
-    } else {
+    if (photos.length == currentCount && couldPickMore) {
       return true;
     }
+
+    return false;
+  }
+
+  void scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) =>
+        _scrollController.animateTo(_scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 200), curve: Curves.easeIn));
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    ref.listen(currentPickedPhotosProvider.select((value) => value.length),
+        (previous, next) => scrollToEnd());
     final photos = ref.watch(currentPickedPhotosProvider);
 
     return Padding(
@@ -47,6 +61,7 @@ class PhotoPickerBar extends ConsumerWidget {
             child: SizedBox(
               height: 80,
               child: ListView.builder(
+                controller: _scrollController,
                 itemCount: photos.length +
                     (couldPickMorePhotos(photos, HighlightData.maxPhotosLength)
                         ? 1
@@ -55,9 +70,14 @@ class PhotoPickerBar extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   if (shouldBuildAddWidget(
                       photos, HighlightData.maxPhotosLength, index)) {
-                    return const AddPhotoBox();
+                    return const Padding(
+                        padding: EdgeInsets.only(right: 4),
+                        child: AddPhotoBox());
                   } else {
-                    return PhotoBox(file: photos[index]);
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: PhotoBox(file: photos[index]),
+                    );
                   }
                 },
               ),
@@ -69,17 +89,22 @@ class PhotoPickerBar extends ConsumerWidget {
   }
 }
 
-class AddPhotoBox extends StatelessWidget {
+class AddPhotoBox extends ConsumerWidget {
   const AddPhotoBox({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Material(
       child: InkWell(
         borderRadius: BorderRadius.circular(4),
-        onTap: () {
-          //TODO: 사진 선택
-        },
+        onTap: () => ImagePicker()
+            .pickImage(source: ImageSource.gallery, requestFullMetadata: false)
+            .then(
+          (value) {
+            if (value == null) return;
+            ref.watch(currentPickedPhotosProvider.notifier).addPhotos([value]);
+          },
+        ),
         child: Container(
             width: 80,
             height: 80,
@@ -106,14 +131,25 @@ class PhotoBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(4),
-        border: Border.all(width: 0.5, color: Colors.black26),
-      ),
-      width: 80,
-      height: 80,
-      child: Image.file(File(file.path)),
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(width: 0.5, color: Colors.black26),
+          ),
+          width: 80,
+          height: 80,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: Image.file(
+              File(file.path),
+              fit: BoxFit.cover,
+              filterQuality: FilterQuality.low,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
