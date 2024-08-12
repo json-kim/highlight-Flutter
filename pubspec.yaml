@@ -49,6 +49,9 @@ dependencies:
   # 컬러 선택
   flex_color_picker: ^3.5.1
 
+  # 사진 선택
+  image_picker: ^1.1.2
+
 
 dev_dependencies:
   flutter_test:
