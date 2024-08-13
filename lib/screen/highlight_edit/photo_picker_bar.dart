@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlight_flutter/app/router/app_router.dart';
 import 'package:highlight_flutter/app/router/router_object_cache.dart';
 import 'package:highlight_flutter/const/highlight/highlight_data.dart';
+import 'package:highlight_flutter/screen/common/delete_button.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_picked_photos_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -176,24 +177,6 @@ class PhotoBox extends StatelessWidget {
                 onTap: onDelete!,
               ))
       ],
-    );
-  }
-}
-
-class DeleteButton extends StatelessWidget {
-  const DeleteButton({required this.onTap, super.key});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Image.asset(
-        'asset/icons/cross_mark_button.png',
-        width: 20,
-        height: 20,
-      ),
     );
   }
 }
