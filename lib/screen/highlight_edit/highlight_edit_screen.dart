@@ -8,6 +8,7 @@ import 'package:highlight_flutter/screen/highlight_edit/content_field_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/date_select_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/photo_picker_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/highlight_save_provider.dart';
+import 'package:highlight_flutter/screen/highlight_edit/state/save_valid_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/title_field_bar.dart';
 
 class HighlightEditScreen extends ConsumerWidget {
@@ -39,14 +40,7 @@ class HighlightEditScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextButton(
-            // onPressed: () =>
-            //     ref.watch(highlightSaveProvider.notifier).saveHighlight(),
-            onPressed: null,
-            child: const Text('저장'),
-          )
-        ],
+        actions: const [SaveButton()],
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -58,6 +52,22 @@ class HighlightEditScreen extends ConsumerWidget {
           PhotoPickerBar(),
         ],
       ),
+    );
+  }
+}
+
+class SaveButton extends ConsumerWidget {
+  const SaveButton({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final saveValid = ref.watch(saveValidProvider);
+
+    return TextButton(
+      onPressed: saveValid
+          ? () => ref.watch(highlightSaveProvider.notifier).saveHighlight()
+          : null,
+      child: const Text('저장'),
     );
   }
 }
