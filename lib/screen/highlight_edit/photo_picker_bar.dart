@@ -130,37 +130,42 @@ class AddPhotoBox extends ConsumerWidget {
 }
 
 class PhotoBox extends StatelessWidget {
-  const PhotoBox({required this.file, required this.onDelete, super.key});
+  const PhotoBox({required this.file, this.onDelete, this.onTap, super.key});
 
   final XFile file;
-  final VoidCallback onDelete;
+  final VoidCallback? onDelete;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(width: 0.5, color: Colors.black26),
-          ),
-          width: 80,
-          height: 80,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Image.file(
-              File(file.path),
-              fit: BoxFit.cover,
-              filterQuality: FilterQuality.low,
+        GestureDetector(
+          onTap: onTap,
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(width: 0.5, color: Colors.black26),
+            ),
+            width: 80,
+            height: 80,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: Image.file(
+                File(file.path),
+                fit: BoxFit.cover,
+                filterQuality: FilterQuality.low,
+              ),
             ),
           ),
         ),
-        Positioned(
-            top: 4,
-            right: 4,
-            child: DeleteButton(
-              onTap: onDelete,
-            ))
+        if (onDelete != null)
+          Positioned(
+              top: 4,
+              right: 4,
+              child: DeleteButton(
+                onTap: onDelete!,
+              ))
       ],
     );
   }
