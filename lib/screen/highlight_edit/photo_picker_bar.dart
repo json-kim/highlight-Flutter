@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
+import 'package:highlight_flutter/app/router/router_object_cache.dart';
 import 'package:highlight_flutter/const/highlight/highlight_data.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_picked_photos_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -81,6 +83,13 @@ class _PhotoPickerBarState extends ConsumerState<PhotoPickerBar> {
                         onDelete: () => ref
                             .watch(currentPickedPhotosProvider.notifier)
                             .deletePhoto(photos[index]),
+                        onTap: () {
+                          RouterObjectCache().put(photos.hashCode, photos);
+                          PhotoViewRouteDate(
+                                  initialIndex: index,
+                                  photoHash: photos.hashCode)
+                              .push(context);
+                        },
                       ),
                     );
                   }
