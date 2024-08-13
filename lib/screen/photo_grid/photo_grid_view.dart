@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
 import 'package:highlight_flutter/core/image/file_image_data.dart';
 import 'package:highlight_flutter/core/image/image_data.dart';
 
@@ -30,7 +31,7 @@ class PhotoGridItem extends StatelessWidget {
     return Material(
         child: InkWell(
       onTap: () {
-        // TODO: 상세 화면 이동
+        const DetailRouteDate().push(context);
       },
       child: imageData.toImageWidget(),
     ));

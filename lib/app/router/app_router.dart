@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:highlight_flutter/screen/highlight_detail/highlight_detail_screen.dart';
 import 'package:highlight_flutter/screen/highlight_edit/highlight_edit_screen.dart';
 import 'package:highlight_flutter/screen/highlight_list/highlight_list_screen.dart';
 import 'package:highlight_flutter/screen/init/init_screen.dart';
@@ -21,6 +22,7 @@ abstract class Routes {
   static const reset = 'reset';
   static const version = 'version';
   static const edit = 'edit';
+  static const detail = 'detail';
 }
 
 final appRouter = GoRouter(
@@ -50,6 +52,7 @@ final appRouter = GoRouter(
           ),
         ]),
     TypedGoRoute<EditRouteData>(path: Routes.edit),
+    TypedGoRoute<DetailRouteDate>(path: Routes.detail),
     TypedGoRoute<BackupRouteData>(path: Routes.backup),
     TypedGoRoute<ResetRouteData>(path: Routes.reset),
     TypedGoRoute<VersionRouteData>(path: Routes.version),
@@ -62,15 +65,26 @@ class SampleMainRouteData extends GoRouteData {
   Widget build(BuildContext context, GoRouterState state) {
     return const InitScreen();
   }
+
+  @override
+  FutureOr<String?> redirect(BuildContext context, GoRouterState state) {
+    if (state.fullPath == Routes.home) {
+      return '/${Routes.list}';
+    }
+    return super.redirect(context, state);
+  }
 }
 
 class MainRouteData extends StatefulShellRouteData {
   const MainRouteData();
 
   @override
-  Widget builder(BuildContext context, GoRouterState state,
+  Page<void> pageBuilder(BuildContext context, GoRouterState state,
       StatefulNavigationShell navigationShell) {
-    return MainScreen(navigationShell: navigationShell);
+    return NoTransitionPage(
+        key: state.pageKey,
+        name: state.name,
+        child: MainScreen(navigationShell: navigationShell));
   }
 }
 
@@ -134,5 +148,14 @@ class EditRouteData extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage(child: HighlightEditScreen());
+  }
+}
+
+class DetailRouteDate extends GoRouteData {
+  const DetailRouteDate();
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return const NoTransitionPage(child: HighlightDetailScreen());
   }
 }
