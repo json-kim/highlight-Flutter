@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
+import 'package:highlight_flutter/app/router/router_object_cache.dart';
 import 'package:highlight_flutter/screen/highlight_edit/photo_picker_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -34,7 +36,10 @@ class PhotoListBar extends StatelessWidget {
                     child: PhotoBox(
                       file: photos[index],
                       onTap: () {
-                        print("tap");
+                        RouterObjectCache().put(photos.hashCode, photos);
+                        PhotoViewRouteDate(
+                                initialIndex: index, photoHash: photos.hashCode)
+                            .push(context);
                       },
                     ),
                   );

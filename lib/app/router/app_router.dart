@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:highlight_flutter/app/router/router_object_cache.dart';
+import 'package:highlight_flutter/screen/common/photo_view_screen.dart';
 import 'package:highlight_flutter/screen/highlight_detail/highlight_detail_screen.dart';
 import 'package:highlight_flutter/screen/highlight_edit/highlight_edit_screen.dart';
 import 'package:highlight_flutter/screen/highlight_list/highlight_list_screen.dart';
@@ -10,6 +12,7 @@ import 'package:highlight_flutter/screen/main/main_screen.dart';
 import 'package:highlight_flutter/screen/photo_grid/photo_grid_screen.dart';
 import 'package:highlight_flutter/screen/profile/profile_screen.dart';
 import 'package:highlight_flutter/screen/version/version_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'app_router.g.dart';
 
@@ -23,6 +26,7 @@ abstract class Routes {
   static const version = 'version';
   static const edit = 'edit';
   static const detail = 'detail';
+  static const photoview = 'photoview';
 }
 
 final appRouter = GoRouter(
@@ -56,6 +60,7 @@ final appRouter = GoRouter(
     TypedGoRoute<BackupRouteData>(path: Routes.backup),
     TypedGoRoute<ResetRouteData>(path: Routes.reset),
     TypedGoRoute<VersionRouteData>(path: Routes.version),
+    TypedGoRoute<PhotoViewRouteDate>(path: Routes.photoview),
   ],
 )
 class SampleMainRouteData extends GoRouteData {
@@ -157,5 +162,26 @@ class DetailRouteDate extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return const NoTransitionPage(child: HighlightDetailScreen());
+  }
+}
+
+class PhotoViewRouteDate extends GoRouteData {
+  PhotoViewRouteDate({this.initialIndex, required this.photoHash});
+
+  final int? initialIndex;
+  final int photoHash;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    final photos = RouterObjectCache().get(photoHash) as List<XFile>? ?? [];
+    return NoTransitionPage(
+        child:
+            PhotoViewScreen(photos: photos, initialIndex: initialIndex ?? 0));
+  }
+
+  @override
+  FutureOr<bool> onExit(BuildContext context, GoRouterState state) {
+    RouterObjectCache().delete(photoHash);
+    return super.onExit(context, state);
   }
 }

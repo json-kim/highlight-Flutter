@@ -63,6 +63,10 @@ RouteBase get $sampleMainRouteData => GoRouteData.$route(
           path: 'version',
           factory: $VersionRouteDataExtension._fromState,
         ),
+        GoRouteData.$route(
+          path: 'photoview',
+          factory: $PhotoViewRouteDateExtension._fromState,
+        ),
       ],
     );
 
@@ -228,4 +232,39 @@ extension $VersionRouteDataExtension on VersionRouteData {
       context.pushReplacement(location);
 
   void replace(BuildContext context) => context.replace(location);
+}
+
+extension $PhotoViewRouteDateExtension on PhotoViewRouteDate {
+  static PhotoViewRouteDate _fromState(GoRouterState state) =>
+      PhotoViewRouteDate(
+        initialIndex: _$convertMapValue(
+            'initial-index', state.uri.queryParameters, int.parse),
+        photoHash: int.parse(state.uri.queryParameters['photo-hash']!),
+      );
+
+  String get location => GoRouteData.$location(
+        '/photoview',
+        queryParams: {
+          if (initialIndex != null) 'initial-index': initialIndex!.toString(),
+          'photo-hash': photoHash.toString(),
+        },
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+T? _$convertMapValue<T>(
+  String key,
+  Map<String, String> map,
+  T Function(String) converter,
+) {
+  final value = map[key];
+  return value == null ? null : converter(value);
 }
