@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 class PhotoViewScreen extends StatelessWidget {
@@ -20,6 +21,8 @@ class PhotoViewScreen extends StatelessWidget {
             pageController: pageController,
             itemCount: photos.length,
             builder: (context, index) => PhotoViewGalleryPageOptions(
+                heroAttributes:
+                    PhotoViewHeroAttributes(tag: '${photos[index].hashCode}'),
                 imageProvider: FileImage(File(photos[index].path)))),
         Positioned(
             right: 8,

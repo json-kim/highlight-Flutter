@@ -161,10 +161,13 @@ class PhotoBox extends StatelessWidget {
             height: 80,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
-              child: Image.file(
-                File(file.path),
-                fit: BoxFit.cover,
-                filterQuality: FilterQuality.low,
+              child: Hero(
+                tag: '${file.hashCode}',
+                child: Image.file(
+                  File(file.path),
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.low,
+                ),
               ),
             ),
           ),

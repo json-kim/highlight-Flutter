@@ -172,11 +172,9 @@ class PhotoViewRouteDate extends GoRouteData {
   final int photoHash;
 
   @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) {
+  Widget build(BuildContext context, GoRouterState state) {
     final photos = RouterObjectCache().get(photoHash) as List<XFile>? ?? [];
-    return NoTransitionPage(
-        child:
-            PhotoViewScreen(photos: photos, initialIndex: initialIndex ?? 0));
+    return PhotoViewScreen(photos: photos, initialIndex: initialIndex ?? 0);
   }
 
   @override
