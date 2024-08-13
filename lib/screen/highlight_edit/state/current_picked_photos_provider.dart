@@ -17,4 +17,9 @@ class CurrentPickedPhotos extends AutoDisposeNotifier<List<XFile>> {
     state.addAll(newPhotos);
     ref.notifyListeners();
   }
+
+  void deletePhoto(XFile photo) {
+    state.remove(photo);
+    ref.notifyListeners();
+  }
 }
