@@ -48,6 +48,10 @@ RouteBase get $sampleMainRouteData => GoRouteData.$route(
           factory: $EditRouteDataExtension._fromState,
         ),
         GoRouteData.$route(
+          path: 'detail',
+          factory: $DetailRouteDateExtension._fromState,
+        ),
+        GoRouteData.$route(
           path: 'backup',
           factory: $BackupRouteDataExtension._fromState,
         ),
@@ -142,6 +146,24 @@ extension $EditRouteDataExtension on EditRouteData {
 
   String get location => GoRouteData.$location(
         '/edit',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+extension $DetailRouteDateExtension on DetailRouteDate {
+  static DetailRouteDate _fromState(GoRouterState state) =>
+      const DetailRouteDate();
+
+  String get location => GoRouteData.$location(
+        '/detail',
       );
 
   void go(BuildContext context) => context.go(location);

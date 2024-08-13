@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:highlight_flutter/app/router/app_router.dart';
 import 'package:intl/intl.dart';
 
 class HighlightListView extends StatelessWidget {
@@ -37,7 +38,7 @@ class HighlightListItem extends StatelessWidget {
     return Material(
       child: InkWell(
         onTap: () {
-          // TODO: 상세 페이지로 이동
+          const DetailRouteDate().push(context);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
