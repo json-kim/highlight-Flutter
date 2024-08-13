@@ -14,6 +14,7 @@ class HighlightApp extends StatelessWidget {
         ProviderLogger(),
       ],
       child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
         title: 'Highlight',
         theme: lightTheme,
         routerConfig: appRouter,
