@@ -76,7 +76,12 @@ class _PhotoPickerBarState extends ConsumerState<PhotoPickerBar> {
                   } else {
                     return Padding(
                       padding: const EdgeInsets.only(right: 4),
-                      child: PhotoBox(file: photos[index]),
+                      child: PhotoBox(
+                        file: photos[index],
+                        onDelete: () => ref
+                            .watch(currentPickedPhotosProvider.notifier)
+                            .deletePhoto(photos[index]),
+                      ),
                     );
                   }
                 },
@@ -125,9 +130,10 @@ class AddPhotoBox extends ConsumerWidget {
 }
 
 class PhotoBox extends StatelessWidget {
-  const PhotoBox({required this.file, super.key});
+  const PhotoBox({required this.file, required this.onDelete, super.key});
 
   final XFile file;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +155,31 @@ class PhotoBox extends StatelessWidget {
             ),
           ),
         ),
+        Positioned(
+            top: 4,
+            right: 4,
+            child: DeleteButton(
+              onTap: onDelete,
+            ))
       ],
+    );
+  }
+}
+
+class DeleteButton extends StatelessWidget {
+  const DeleteButton({required this.onTap, super.key});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Image.asset(
+        'asset/icons/cross_mark_button.png',
+        width: 20,
+        height: 20,
+      ),
     );
   }
 }
