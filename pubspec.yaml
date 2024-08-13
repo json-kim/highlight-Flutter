@@ -52,6 +52,9 @@ dependencies:
   # 사진 선택
   image_picker: ^1.1.2
 
+  # 사진 뷰어
+  photo_view: ^0.15.0
+
 
 dev_dependencies:
   flutter_test:
