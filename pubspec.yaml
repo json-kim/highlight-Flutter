@@ -61,22 +61,32 @@ dependencies:
   # 모델 클래스 코드 제너레이터
   freezed_annotation: ^2.4.4
 
+  # 로컬 db
+  drift: ^2.19.2
+  drift_flutter: ^0.1.0
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
+  # 린트
   flutter_lints: ^3.0.0
-  go_router_builder: 2.7.0
+
+  # 코드 생성 도구
   build_runner: 2.4.11
+
+  # gorouter 코드 생성
+  go_router_builder: 2.7.0
   build_verify: 3.1.0
+  
+  # freezed, jsonserializable 코드 생성
   freezed: ^2.5.2
   json_serializable: ^6.8.0
+
+  # drift 코드 생성
+  drift_dev: ^2.19.0
+
 
 
 # For information on the generic Dart part of this file, see the
