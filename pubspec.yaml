@@ -44,7 +44,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
 
   # 버전 정보
-  package_info_plus: 8.0.0
+  package_info_plus: ^8.0.2
 
   # 컬러 선택
   flex_color_picker: ^3.5.1
@@ -54,6 +54,9 @@ dependencies:
 
   # 사진 뷰어
   photo_view: ^0.15.0
+
+  # 공유 기능
+  share_plus: ^10.0.1
 
 
 dev_dependencies:
