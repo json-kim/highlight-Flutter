@@ -1,3 +1,4 @@
+import 'package:highlight_flutter/util/list/list_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,12 +15,10 @@ class CurrentPickedPhotos extends AutoDisposeNotifier<List<XFile>> {
   }
 
   void addPhotos(List<XFile> newPhotos) {
-    state.addAll(newPhotos);
-    ref.notifyListeners();
+    state = addElementsLast(state, newPhotos);
   }
 
   void deletePhoto(XFile photo) {
-    state.remove(photo);
-    ref.notifyListeners();
+    state = removeElement(state, photo);
   }
 }
