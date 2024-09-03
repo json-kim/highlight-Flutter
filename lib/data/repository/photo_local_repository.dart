@@ -1,8 +1,10 @@
 import 'package:highlight_flutter/data/data_source/local/dao/highlights_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/dao/photos_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/image_file/image_file_local_data_source.dart';
+import 'package:highlight_flutter/domain/model/exception/photo_exception.dart';
 import 'package:highlight_flutter/domain/repository/photo_repository.dart';
 import 'package:highlight_flutter/domain/model/photo_thumbnail_model.dart';
+import 'package:highlight_flutter/domain/repository/result/api_result.dart';
 import 'package:image_picker/image_picker.dart';
 
 class PhotoLocalRepository implements PhotoRepository {
@@ -16,21 +18,34 @@ class PhotoLocalRepository implements PhotoRepository {
   final ImageFileLocalDataSource imageDataSource;
 
   @override
-  Future<List<PhotoThumbnailModel>> retrievePhotos(
+  Future<PhotoApiResult<List<PhotoThumbnailModel>>> retrievePhotos(
       {String? cursorHighlightId}) async {
-    final highlightDate = cursorHighlightId == null
-        ? DateTime.now()
-        : await highlightsDao.selectHighlightDate(cursorHighlightId);
+    try {
+      final highlightDate = cursorHighlightId == null
+          ? DateTime.now()
+          : await highlightsDao.selectHighlightDate(cursorHighlightId);
 
-    final photos =
-        await photosDao.selectPhotos(highlightDate ?? DateTime.now());
+      final photos =
+          await photosDao.selectPhotos(highlightDate ?? DateTime.now());
 
-    return photos;
+      return ApiSuccess(photos);
+    } catch (e, s) {
+      return ApiFail(PhotoException(
+          message: PhotoException.retrieveRequestFail, trace: s));
+    }
   }
 
   @override
-  Future<void> savePhoto(PhotoModel photo, String highlightId) async {
-    await imageDataSource.saveImage(XFile(photo.path));
-    await photosDao.insertPhoto(photo.path, highlightId);
+  Future<PhotoApiResult<void>> savePhoto(
+      PhotoModel photo, String highlightId) async {
+    try {
+      await imageDataSource.saveImage(XFile(photo.path));
+      await photosDao.insertPhoto(photo.path, highlightId);
+
+      return ApiSuccess(null);
+    } catch (e, s) {
+      return ApiFail(
+          PhotoException(message: PhotoException.saveRequestFail, trace: s));
+    }
   }
 }
