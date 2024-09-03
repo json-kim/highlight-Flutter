@@ -1,7 +1,7 @@
 import 'package:highlight_flutter/data/data_source/local/dao/highlights_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/dao/photos_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/image_file/image_file_local_data_source.dart';
-import 'package:highlight_flutter/data/repository/highlight_repository.dart';
+import 'package:highlight_flutter/domain/repository/highlight_repository.dart';
 import 'package:highlight_flutter/domain/model/highlight_model.dart';
 import 'package:image_picker/image_picker.dart';
 
