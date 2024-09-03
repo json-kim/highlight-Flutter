@@ -7,6 +7,7 @@ class PhotosTable extends Table {
   TextColumn get path => text()();
   TextColumn get highlight => text().references(HighlightsTable, #id,
       onDelete: KeyAction.cascade, onUpdate: KeyAction.cascade)();
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDate)();
 
   @override
   Set<Column> get primaryKey => {id};
