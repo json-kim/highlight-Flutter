@@ -336,8 +336,16 @@ class $PhotosTableTable extends PhotosTable
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'REFERENCES highlights_table (id) ON UPDATE CASCADE ON DELETE CASCADE'));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
   @override
-  List<GeneratedColumn> get $columns => [id, path, highlight];
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDate);
+  @override
+  List<GeneratedColumn> get $columns => [id, path, highlight, createdAt];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -363,6 +371,10 @@ class $PhotosTableTable extends PhotosTable
     } else if (isInserting) {
       context.missing(_highlightMeta);
     }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
     return context;
   }
 
@@ -378,6 +390,8 @@ class $PhotosTableTable extends PhotosTable
           .read(DriftSqlType.string, data['${effectivePrefix}path'])!,
       highlight: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}highlight'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
     );
   }
 
@@ -391,14 +405,19 @@ class PhotosTableData extends DataClass implements Insertable<PhotosTableData> {
   final String id;
   final String path;
   final String highlight;
+  final DateTime createdAt;
   const PhotosTableData(
-      {required this.id, required this.path, required this.highlight});
+      {required this.id,
+      required this.path,
+      required this.highlight,
+      required this.createdAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['path'] = Variable<String>(path);
     map['highlight'] = Variable<String>(highlight);
+    map['created_at'] = Variable<DateTime>(createdAt);
     return map;
   }
 
@@ -407,6 +426,7 @@ class PhotosTableData extends DataClass implements Insertable<PhotosTableData> {
       id: Value(id),
       path: Value(path),
       highlight: Value(highlight),
+      createdAt: Value(createdAt),
     );
   }
 
@@ -417,6 +437,7 @@ class PhotosTableData extends DataClass implements Insertable<PhotosTableData> {
       id: serializer.fromJson<String>(json['id']),
       path: serializer.fromJson<String>(json['path']),
       highlight: serializer.fromJson<String>(json['highlight']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
     );
   }
   @override
@@ -426,20 +447,24 @@ class PhotosTableData extends DataClass implements Insertable<PhotosTableData> {
       'id': serializer.toJson<String>(id),
       'path': serializer.toJson<String>(path),
       'highlight': serializer.toJson<String>(highlight),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
     };
   }
 
-  PhotosTableData copyWith({String? id, String? path, String? highlight}) =>
+  PhotosTableData copyWith(
+          {String? id, String? path, String? highlight, DateTime? createdAt}) =>
       PhotosTableData(
         id: id ?? this.id,
         path: path ?? this.path,
         highlight: highlight ?? this.highlight,
+        createdAt: createdAt ?? this.createdAt,
       );
   PhotosTableData copyWithCompanion(PhotosTableCompanion data) {
     return PhotosTableData(
       id: data.id.present ? data.id.value : this.id,
       path: data.path.present ? data.path.value : this.path,
       highlight: data.highlight.present ? data.highlight.value : this.highlight,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
     );
   }
 
@@ -448,37 +473,42 @@ class PhotosTableData extends DataClass implements Insertable<PhotosTableData> {
     return (StringBuffer('PhotosTableData(')
           ..write('id: $id, ')
           ..write('path: $path, ')
-          ..write('highlight: $highlight')
+          ..write('highlight: $highlight, ')
+          ..write('createdAt: $createdAt')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, path, highlight);
+  int get hashCode => Object.hash(id, path, highlight, createdAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is PhotosTableData &&
           other.id == this.id &&
           other.path == this.path &&
-          other.highlight == this.highlight);
+          other.highlight == this.highlight &&
+          other.createdAt == this.createdAt);
 }
 
 class PhotosTableCompanion extends UpdateCompanion<PhotosTableData> {
   final Value<String> id;
   final Value<String> path;
   final Value<String> highlight;
+  final Value<DateTime> createdAt;
   final Value<int> rowid;
   const PhotosTableCompanion({
     this.id = const Value.absent(),
     this.path = const Value.absent(),
     this.highlight = const Value.absent(),
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PhotosTableCompanion.insert({
     this.id = const Value.absent(),
     required String path,
     required String highlight,
+    this.createdAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : path = Value(path),
         highlight = Value(highlight);
@@ -486,12 +516,14 @@ class PhotosTableCompanion extends UpdateCompanion<PhotosTableData> {
     Expression<String>? id,
     Expression<String>? path,
     Expression<String>? highlight,
+    Expression<DateTime>? createdAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (path != null) 'path': path,
       if (highlight != null) 'highlight': highlight,
+      if (createdAt != null) 'created_at': createdAt,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -500,11 +532,13 @@ class PhotosTableCompanion extends UpdateCompanion<PhotosTableData> {
       {Value<String>? id,
       Value<String>? path,
       Value<String>? highlight,
+      Value<DateTime>? createdAt,
       Value<int>? rowid}) {
     return PhotosTableCompanion(
       id: id ?? this.id,
       path: path ?? this.path,
       highlight: highlight ?? this.highlight,
+      createdAt: createdAt ?? this.createdAt,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -521,6 +555,9 @@ class PhotosTableCompanion extends UpdateCompanion<PhotosTableData> {
     if (highlight.present) {
       map['highlight'] = Variable<String>(highlight.value);
     }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -533,6 +570,7 @@ class PhotosTableCompanion extends UpdateCompanion<PhotosTableData> {
           ..write('id: $id, ')
           ..write('path: $path, ')
           ..write('highlight: $highlight, ')
+          ..write('createdAt: $createdAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -545,6 +583,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $HighlightsTableTable highlightsTable =
       $HighlightsTableTable(this);
   late final $PhotosTableTable photosTable = $PhotosTableTable(this);
+  late final HighlightsDao highlightsDao = HighlightsDao(this as AppDatabase);
+  late final PhotosDao photosDao = PhotosDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -722,6 +762,7 @@ typedef $$PhotosTableTableCreateCompanionBuilder = PhotosTableCompanion
   Value<String> id,
   required String path,
   required String highlight,
+  Value<DateTime> createdAt,
   Value<int> rowid,
 });
 typedef $$PhotosTableTableUpdateCompanionBuilder = PhotosTableCompanion
@@ -729,6 +770,7 @@ typedef $$PhotosTableTableUpdateCompanionBuilder = PhotosTableCompanion
   Value<String> id,
   Value<String> path,
   Value<String> highlight,
+  Value<DateTime> createdAt,
   Value<int> rowid,
 });
 
@@ -752,24 +794,28 @@ class $$PhotosTableTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<String> path = const Value.absent(),
             Value<String> highlight = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               PhotosTableCompanion(
             id: id,
             path: path,
             highlight: highlight,
+            createdAt: createdAt,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             Value<String> id = const Value.absent(),
             required String path,
             required String highlight,
+            Value<DateTime> createdAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               PhotosTableCompanion.insert(
             id: id,
             path: path,
             highlight: highlight,
+            createdAt: createdAt,
             rowid: rowid,
           ),
         ));
@@ -785,6 +831,11 @@ class $$PhotosTableTableFilterComposer
 
   ColumnFilters<String> get path => $state.composableBuilder(
       column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<DateTime> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -812,6 +863,11 @@ class $$PhotosTableTableOrderingComposer
 
   ColumnOrderings<String> get path => $state.composableBuilder(
       column: $state.table.path,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<DateTime> get createdAt => $state.composableBuilder(
+      column: $state.table.createdAt,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
