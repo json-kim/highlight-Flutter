@@ -12,9 +12,10 @@ _$HighlightModelImpl _$$HighlightModelImplFromJson(Map<String, dynamic> json) =>
       content: json['content'] as String,
       date: DateTime.parse(json['date'] as String),
       color: const ColorConverter().fromJson((json['color'] as num).toInt()),
-      photos: (json['photos'] as List<dynamic>)
-          .map((e) => const XFileConverter().fromJson(e as String))
-          .toList(),
+      photos: (json['photos'] as List<dynamic>?)
+              ?.map((e) => const XFileConverter().fromJson(e as String))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$HighlightModelImplToJson(
