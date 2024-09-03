@@ -158,7 +158,7 @@ class _$HighlightModelImpl implements _HighlightModel {
       required this.content,
       required this.date,
       @ColorConverter() required this.color,
-      @XFileConverter() required final List<XFile> photos})
+      @XFileConverter() final List<XFile> photos = const []})
       : _photos = photos;
 
   factory _$HighlightModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -175,6 +175,7 @@ class _$HighlightModelImpl implements _HighlightModel {
   final Color color;
   final List<XFile> _photos;
   @override
+  @JsonKey()
   @XFileConverter()
   List<XFile> get photos {
     if (_photos is EqualUnmodifiableListView) return _photos;
@@ -221,12 +222,11 @@ class _$HighlightModelImpl implements _HighlightModel {
 
 abstract class _HighlightModel implements HighlightModel {
   const factory _HighlightModel(
-          {required final String title,
-          required final String content,
-          required final DateTime date,
-          @ColorConverter() required final Color color,
-          @XFileConverter() required final List<XFile> photos}) =
-      _$HighlightModelImpl;
+      {required final String title,
+      required final String content,
+      required final DateTime date,
+      @ColorConverter() required final Color color,
+      @XFileConverter() final List<XFile> photos}) = _$HighlightModelImpl;
 
   factory _HighlightModel.fromJson(Map<String, dynamic> json) =
       _$HighlightModelImpl.fromJson;

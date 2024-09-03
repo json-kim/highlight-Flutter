@@ -14,7 +14,7 @@ class HighlightModel with _$HighlightModel {
     required String content,
     required DateTime date,
     @ColorConverter() required Color color,
-    @XFileConverter() required List<XFile> photos,
+    @XFileConverter() @Default([]) List<XFile> photos,
   }) = _HighlightModel;
 
   factory HighlightModel.fromJson(Map<String, dynamic> json) =>
