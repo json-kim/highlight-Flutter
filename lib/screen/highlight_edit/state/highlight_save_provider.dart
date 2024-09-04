@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/domain/repository/repository_provider.dart';
+import 'package:highlight_flutter/domain/model/highlight_model.dart';
+import 'package:highlight_flutter/domain/repository/result/api_result.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_content_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_picked_photos_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/current_title_provider.dart';
@@ -13,42 +16,63 @@ final highlightSaveProvider =
   name: '[Provider]HighlightSave',
 );
 
+typedef InputData = ({
+  String title,
+  String content,
+  DateTime date,
+  Color color,
+  List<XFile> photos
+});
+
 class HighlightSave extends AutoDisposeNotifier<SaveState> {
+  HighlightSave();
+
   @override
   SaveState build() {
     return SaveNotReady.titleRequired();
   }
 
   Future<void> saveHighlight() async {
-    final request = _makeRequest();
+    final currentData = readCurrentData();
+    final readyOrNotReady =
+        checkValidate(currentData.title, currentData.content);
 
-    if (request is SaveNotReady) {
-      state = request;
+    if (readyOrNotReady is SaveNotReady) {
+      state = readyOrNotReady;
       return;
     }
 
-    // TODO: 저장 요청
-    state = SaveSuccess();
-    // state = SaveFail(failReason: '저장에 실패했습니다');
+    final request = SaveRequest.fromInputData(currentData);
+    state = request;
+    state = await requestSaveHighlight(request);
     return;
   }
 
-  SaveState _makeRequest() {
-    final date = ref.watch(selectedDateProvider.notifier).state;
-    final color = ref.watch(selectedColorProvider.notifier).state;
-    final title = ref.watch(currentTitleProvider.notifier).state;
-    final content = ref.watch(currentContentProvider.notifier).state;
-    final photos = ref.watch(currentPickedPhotosProvider.notifier).state;
+  InputData readCurrentData() {
+    return (
+      title: ref.watch(currentTitleProvider.notifier).state,
+      content: ref.watch(currentContentProvider.notifier).state,
+      date: ref.watch(selectedDateProvider.notifier).state,
+      color: ref.watch(selectedColorProvider.notifier).state,
+      photos: ref.watch(currentPickedPhotosProvider.notifier).state
+    );
+  }
 
+  SaveState? checkValidate(String title, String content) {
     if (title.isEmpty) return SaveNotReady.titleRequired();
     if (content.isEmpty) return SaveNotReady.contentRequired();
+    return SaveReady();
+  }
 
-    return SaveRequest(
-        date: date,
-        color: color,
-        title: title,
-        content: content,
-        photos: photos);
+  Future<SaveState> requestSaveHighlight(SaveRequest request) async {
+    final result = await ref
+        .watch(highlightRepositoryProvider)
+        .saveHighlight(request.toModel());
+
+    return switch (result) {
+      ApiSuccess() => SaveSuccess(),
+      ApiFail() => SaveFail(failReason: result.exception.message.toString())
+    };
   }
 }
 
@@ -69,6 +93,8 @@ class SaveNotReady extends SaveState {
   }
 }
 
+class SaveReady extends SaveState {}
+
 class SaveRequest extends SaveState {
   SaveRequest(
       {required this.date,
@@ -82,6 +108,16 @@ class SaveRequest extends SaveState {
   final String title;
   final String content;
   final List<XFile> photos;
+
+  factory SaveRequest.fromInputData(InputData data) => SaveRequest(
+      title: data.title,
+      content: data.content,
+      date: data.date,
+      color: data.color,
+      photos: data.photos);
+
+  HighlightModel toModel() => HighlightModel(
+      id: 'tempId', title: title, content: content, date: date, color: color);
 }
 
 class SaveSuccess extends SaveState {}
