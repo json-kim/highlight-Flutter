@@ -117,7 +117,12 @@ class SaveRequest extends SaveState {
       photos: data.photos);
 
   HighlightModel toModel() => HighlightModel(
-      id: 'tempId', title: title, content: content, date: date, color: color);
+      id: 'tempId',
+      title: title,
+      content: content,
+      date: date,
+      color: color,
+      photos: photos);
 }
 
 class SaveSuccess extends SaveState {}
