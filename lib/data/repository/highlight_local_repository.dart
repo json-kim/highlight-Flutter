@@ -71,9 +71,8 @@ class HighlightLocalRepository implements HighlightRepository {
       final highlightId = await highlightsDao.selectHighlightId(rowId);
 
       if (highlightId == null) return ApiResult.success(null);
-      await _saveMultiImage(highlight.photos);
-      await photosDao.insertMultiplePhotos(
-          highlight.photos.map((e) => e.path).toList(), highlightId);
+      final newPaths = await _saveMultiImage(highlight.photos);
+      await photosDao.insertMultiplePhotos(newPaths, highlightId);
 
       return ApiResult.success(null);
     } catch (e, t) {
@@ -82,7 +81,7 @@ class HighlightLocalRepository implements HighlightRepository {
     }
   }
 
-  Future<void> _saveMultiImage(List<XFile> photos) async {
-    await Future.wait(photos.map((e) => imageDataSource.saveImage(e)));
+  Future<List<String>> _saveMultiImage(List<XFile> photos) async {
+    return await Future.wait(photos.map((e) => imageDataSource.saveImage(e)));
   }
 }

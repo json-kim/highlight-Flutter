@@ -39,8 +39,8 @@ class PhotoLocalRepository implements PhotoRepository {
   Future<PhotoApiResult<void>> savePhoto(
       PhotoModel photo, String highlightId) async {
     try {
-      await imageDataSource.saveImage(XFile(photo.path));
-      await photosDao.insertPhoto(photo.path, highlightId);
+      final path = await imageDataSource.saveImage(XFile(photo.path));
+      await photosDao.insertPhoto(path, highlightId);
 
       return ApiSuccess(null);
     } catch (e, s) {
