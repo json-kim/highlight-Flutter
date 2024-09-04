@@ -15,6 +15,12 @@ class HighlightListProvider extends AutoDisposeNotifier<List<HighlightModel>> {
     return [];
   }
 
+  Future<bool> refreshPage() async {
+    final nextPageResult = await _loadHighlights(null);
+    state = nextPageResult.list;
+    return nextPageResult.isEnd;
+  }
+
   Future<bool> loadNextPage() async {
     final nextPageResult = await _loadHighlights(nextCursor(state));
     state = addElementsLast(state, nextPageResult.list);

@@ -47,14 +47,18 @@ class _HighlightListViewState extends ConsumerState<HighlightListView> {
   Widget build(BuildContext context) {
     ref.watch(listLoadProvider);
     final highlightList = ref.watch(highlightListProvider);
-    return ListView.builder(
-      controller: scrollController,
-      itemBuilder: (context, index) {
-        return HighlightListItem(
-          highlight: highlightList[index],
-        );
-      },
-      itemCount: highlightList.length,
+    return RefreshIndicator(
+      onRefresh: ref.watch(listLoadProvider.notifier).initLoad,
+      child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(),
+        controller: scrollController,
+        itemBuilder: (context, index) {
+          return HighlightListItem(
+            highlight: highlightList[index],
+          );
+        },
+        itemCount: highlightList.length,
+      ),
     );
   }
 }
