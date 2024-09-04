@@ -1,21 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlight_flutter/app/router/app_router.dart';
+import 'package:highlight_flutter/screen/highlight_list/state/highlight_list_provider.dart';
+import 'package:highlight_flutter/screen/highlight_list/state/list_load_provider.dart';
 import 'package:intl/intl.dart';
 
-class HighlightListView extends StatelessWidget {
+class HighlightListView extends ConsumerStatefulWidget {
   const HighlightListView({super.key});
 
   @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _HighlightListViewState();
+}
+
+class _HighlightListViewState extends ConsumerState<HighlightListView> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void initState() {
+    initLoad();
+    scrollController.addListener(_onScroll);
+    super.initState();
+  }
+
+  void initLoad() {
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => ref.watch(listLoadProvider.notifier).listLoad());
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+
+    if (isNearEndOfScroll(scrollController.position)) loadNextPage();
+  }
+
+  void loadNextPage() {
+    ref.watch(listLoadProvider.notifier).listLoad();
+  }
+
+  bool isNearEndOfScroll(ScrollPosition position) {
+    return position.maxScrollExtent - 200 <= position.pixels;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    ref.watch(listLoadProvider);
+    final highlightList = ref.watch(highlightListProvider);
     return ListView.builder(
+      controller: scrollController,
       itemBuilder: (context, index) {
+        final highlight = highlightList[index];
+
         return HighlightListItem(
-          highlightTitle: '홍콩 여행',
-          highlightDate: DateTime(2024, 5, 3),
-          highlightContent: '란퐁유엔 토스트 사랑해',
+          highlightTitle: highlight.title,
+          highlightDate: highlight.date,
+          highlightContent: highlight.content,
         );
       },
-      itemCount: 5,
+      itemCount: highlightList.length,
     );
   }
 }
