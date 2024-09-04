@@ -12,6 +12,17 @@ class ListLoadProvider extends AutoDisposeNotifier<ListLoadState> {
     return LoadReady();
   }
 
+  Future<void> initLoad() async {
+    if (!validateRequest(state)) {
+      return;
+    }
+
+    state = LoadingList();
+    final isEndPage = await _refreshRequest();
+
+    state = isEndPage ? NoMoreList() : LoadReady();
+  }
+
   Future<void> listLoad() async {
     if (!validateRequest(state)) {
       return;
@@ -30,6 +41,10 @@ class ListLoadProvider extends AutoDisposeNotifier<ListLoadState> {
 
   Future<bool> _loadRequest() async {
     return ref.watch(highlightListProvider.notifier).loadNextPage();
+  }
+
+  Future<bool> _refreshRequest() async {
+    return ref.watch(highlightListProvider.notifier).refreshPage();
   }
 }
 
