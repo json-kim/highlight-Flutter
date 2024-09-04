@@ -14,6 +14,7 @@ HighlightModel makeTestHighlightModel(
     Color color = Colors.red,
     List<XFile>? photos}) {
   return HighlightModel(
+      id: 'test',
       title: title,
       content: content,
       date: date ?? DateTime.now(),

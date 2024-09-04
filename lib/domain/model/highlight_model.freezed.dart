@@ -20,6 +20,7 @@ HighlightModel _$HighlightModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HighlightModel {
+  String get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
@@ -41,7 +42,8 @@ abstract class $HighlightModelCopyWith<$Res> {
       _$HighlightModelCopyWithImpl<$Res, HighlightModel>;
   @useResult
   $Res call(
-      {String title,
+      {String id,
+      String title,
       String content,
       DateTime date,
       @ColorConverter() Color color,
@@ -61,6 +63,7 @@ class _$HighlightModelCopyWithImpl<$Res, $Val extends HighlightModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? content = null,
     Object? date = null,
@@ -68,6 +71,10 @@ class _$HighlightModelCopyWithImpl<$Res, $Val extends HighlightModel>
     Object? photos = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -101,7 +108,8 @@ abstract class _$$HighlightModelImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String title,
+      {String id,
+      String title,
       String content,
       DateTime date,
       @ColorConverter() Color color,
@@ -119,6 +127,7 @@ class __$$HighlightModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? content = null,
     Object? date = null,
@@ -126,6 +135,10 @@ class __$$HighlightModelImplCopyWithImpl<$Res>
     Object? photos = null,
   }) {
     return _then(_$HighlightModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -154,7 +167,8 @@ class __$$HighlightModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$HighlightModelImpl implements _HighlightModel {
   const _$HighlightModelImpl(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.content,
       required this.date,
       @ColorConverter() required this.color,
@@ -164,6 +178,8 @@ class _$HighlightModelImpl implements _HighlightModel {
   factory _$HighlightModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HighlightModelImplFromJson(json);
 
+  @override
+  final String id;
   @override
   final String title;
   @override
@@ -185,7 +201,7 @@ class _$HighlightModelImpl implements _HighlightModel {
 
   @override
   String toString() {
-    return 'HighlightModel(title: $title, content: $content, date: $date, color: $color, photos: $photos)';
+    return 'HighlightModel(id: $id, title: $title, content: $content, date: $date, color: $color, photos: $photos)';
   }
 
   @override
@@ -193,6 +209,7 @@ class _$HighlightModelImpl implements _HighlightModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$HighlightModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.date, date) || other.date == date) &&
@@ -202,7 +219,7 @@ class _$HighlightModelImpl implements _HighlightModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, title, content, date, color,
+  int get hashCode => Object.hash(runtimeType, id, title, content, date, color,
       const DeepCollectionEquality().hash(_photos));
 
   @JsonKey(ignore: true)
@@ -222,7 +239,8 @@ class _$HighlightModelImpl implements _HighlightModel {
 
 abstract class _HighlightModel implements HighlightModel {
   const factory _HighlightModel(
-      {required final String title,
+      {required final String id,
+      required final String title,
       required final String content,
       required final DateTime date,
       @ColorConverter() required final Color color,
@@ -231,6 +249,8 @@ abstract class _HighlightModel implements HighlightModel {
   factory _HighlightModel.fromJson(Map<String, dynamic> json) =
       _$HighlightModelImpl.fromJson;
 
+  @override
+  String get id;
   @override
   String get title;
   @override

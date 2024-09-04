@@ -145,6 +145,7 @@ class HighlightsDao extends DatabaseAccessor<AppDatabase>
 
   HighlightModel toHighlightModelWithTableData(HighlightsTableData data) {
     return HighlightModel.fromJson({
+      'id': data.id,
       'title': data.title,
       'content': data.content,
       'date': data.date.toIso8601String(),
@@ -157,6 +158,7 @@ class HighlightsDao extends DatabaseAccessor<AppDatabase>
     final highlightsTableData = row.readTable(highlightsTable);
     final photosJsonArrayString = row.read(photosExpression) ?? '';
     final highlightJson = {
+      'id': highlightsTableData.id,
       'title': highlightsTableData.title,
       'content': highlightsTableData.content,
       'date': highlightsTableData.date.toIso8601String(),

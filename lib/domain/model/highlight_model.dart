@@ -10,6 +10,7 @@ part 'highlight_model.g.dart';
 @freezed
 class HighlightModel with _$HighlightModel {
   const factory HighlightModel({
+    required String id,
     required String title,
     required String content,
     required DateTime date,

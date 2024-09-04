@@ -8,6 +8,7 @@ part of 'highlight_model.dart';
 
 _$HighlightModelImpl _$$HighlightModelImplFromJson(Map<String, dynamic> json) =>
     _$HighlightModelImpl(
+      id: json['id'] as String,
       title: json['title'] as String,
       content: json['content'] as String,
       date: DateTime.parse(json['date'] as String),
@@ -21,6 +22,7 @@ _$HighlightModelImpl _$$HighlightModelImplFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$$HighlightModelImplToJson(
         _$HighlightModelImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'content': instance.content,
       'date': instance.date.toIso8601String(),
