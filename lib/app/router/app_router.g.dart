@@ -48,7 +48,7 @@ RouteBase get $sampleMainRouteData => GoRouteData.$route(
           factory: $EditRouteDataExtension._fromState,
         ),
         GoRouteData.$route(
-          path: 'detail',
+          path: 'detail/:hid',
           factory: $DetailRouteDateExtension._fromState,
         ),
         GoRouteData.$route(
@@ -163,11 +163,12 @@ extension $EditRouteDataExtension on EditRouteData {
 }
 
 extension $DetailRouteDateExtension on DetailRouteDate {
-  static DetailRouteDate _fromState(GoRouterState state) =>
-      const DetailRouteDate();
+  static DetailRouteDate _fromState(GoRouterState state) => DetailRouteDate(
+        hid: state.pathParameters['hid']!,
+      );
 
   String get location => GoRouteData.$location(
-        '/detail',
+        '/detail/${Uri.encodeComponent(hid)}',
       );
 
   void go(BuildContext context) => context.go(location);

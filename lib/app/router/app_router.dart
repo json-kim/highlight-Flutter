@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:highlight_flutter/app/router/router_object_cache.dart';
 import 'package:highlight_flutter/screen/common/photo_view_screen.dart';
 import 'package:highlight_flutter/screen/highlight_detail/highlight_detail_screen.dart';
+import 'package:highlight_flutter/screen/highlight_detail/state/detail_highlight_id_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/highlight_edit_screen.dart';
 import 'package:highlight_flutter/screen/highlight_list/highlight_list_screen.dart';
 import 'package:highlight_flutter/screen/init/init_screen.dart';
@@ -25,7 +27,7 @@ abstract class Routes {
   static const reset = 'reset';
   static const version = 'version';
   static const edit = 'edit';
-  static const detail = 'detail';
+  static const detail = 'detail/:hid';
   static const photoview = 'photoview';
 }
 
@@ -157,11 +159,16 @@ class EditRouteData extends GoRouteData {
 }
 
 class DetailRouteDate extends GoRouteData {
-  const DetailRouteDate();
+  const DetailRouteDate({required this.hid});
+
+  final String hid;
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return NoTransitionPage(child: HighlightDetailScreen());
+    return NoTransitionPage(
+        child: ProviderScope(
+            overrides: [detailHighlightIdProvider.overrideWithValue(hid)],
+            child: HighlightDetailScreen()));
   }
 }
 

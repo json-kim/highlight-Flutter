@@ -31,7 +31,7 @@ class PhotoGridItem extends StatelessWidget {
     return Material(
         child: InkWell(
       onTap: () {
-        const DetailRouteDate().push(context);
+        const DetailRouteDate(hid: '123').push(context);
       },
       child: imageData.toImageWidget(),
     ));

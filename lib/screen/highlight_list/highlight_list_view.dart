@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlight_flutter/app/router/app_router.dart';
+import 'package:highlight_flutter/domain/model/highlight_model.dart';
 import 'package:highlight_flutter/screen/highlight_list/state/highlight_list_provider.dart';
 import 'package:highlight_flutter/screen/highlight_list/state/list_load_provider.dart';
 import 'package:intl/intl.dart';
@@ -49,12 +50,8 @@ class _HighlightListViewState extends ConsumerState<HighlightListView> {
     return ListView.builder(
       controller: scrollController,
       itemBuilder: (context, index) {
-        final highlight = highlightList[index];
-
         return HighlightListItem(
-          highlightTitle: highlight.title,
-          highlightDate: highlight.date,
-          highlightContent: highlight.content,
+          highlight: highlightList[index],
         );
       },
       itemCount: highlightList.length,
@@ -63,24 +60,18 @@ class _HighlightListViewState extends ConsumerState<HighlightListView> {
 }
 
 class HighlightListItem extends StatelessWidget {
-  const HighlightListItem(
-      {required this.highlightTitle,
-      required this.highlightDate,
-      required this.highlightContent,
-      super.key});
+  const HighlightListItem({required this.highlight, super.key});
 
-  final String highlightTitle;
-  final DateTime highlightDate;
-  final String highlightContent;
+  final HighlightModel highlight;
 
-  String get monthDayString => DateFormat('M.d.').format(highlightDate);
+  String get monthDayString => DateFormat('M.d.').format(highlight.date);
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: InkWell(
         onTap: () {
-          const DetailRouteDate().push(context);
+          DetailRouteDate(hid: highlight.id).push(context);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -94,7 +85,7 @@ class HighlightListItem extends StatelessWidget {
               Expanded(
                   flex: 4,
                   child: Text(
-                    highlightTitle,
+                    highlight.title,
                     overflow: TextOverflow.ellipsis,
                   )),
               const SizedBox(width: 8),
@@ -103,7 +94,7 @@ class HighlightListItem extends StatelessWidget {
               Expanded(
                   flex: 6,
                   child: Text(
-                    highlightContent,
+                    highlight.content,
                     overflow: TextOverflow.ellipsis,
                   )),
             ],
