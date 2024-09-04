@@ -167,6 +167,7 @@ class PhotoBox extends StatelessWidget {
                   File(file.path),
                   fit: BoxFit.cover,
                   filterQuality: FilterQuality.low,
+                  cacheWidth: 80,
                 ),
               ),
             ),

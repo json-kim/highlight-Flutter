@@ -13,6 +13,9 @@ class FileImageToWidgetConvertor implements ImageToWidgetConvertor {
   Widget widgetBuilder() {
     return Image.file(
       File(filePath),
+      filterQuality: FilterQuality.low,
+      fit: BoxFit.cover,
+      cacheWidth: 360,
       errorBuilder: (context, error, stackTrace) => const ErrorImage(),
     );
   }
