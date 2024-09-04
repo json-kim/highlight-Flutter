@@ -4,10 +4,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ImageFileLocalDataSource {
-  Future<void> saveImage(XFile file) async {
+  Future<String> saveImage(XFile file) async {
     final newPath = await getFileSavePath(file.path);
 
-    return _saveFile(file.path, newPath);
+    await _saveFile(file.path, newPath);
+    return newPath;
   }
 
   Future<void> _saveFile(String filePath, String newPath) async {
