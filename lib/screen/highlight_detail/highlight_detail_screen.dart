@@ -60,7 +60,7 @@ class HighlightDetailScreen extends ConsumerWidget {
                 ),
                 error: (_, __) =>
                     const FailWidget(failText: '앗! 문제가 발생했어요\n잠시후 다시 시도해주세요'),
-                loading: () => const CircularProgressIndicator(),
+                loading: () => const Center(child: CircularProgressIndicator()),
               ),
         ),
       ),
