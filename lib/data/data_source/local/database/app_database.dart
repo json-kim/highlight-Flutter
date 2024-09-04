@@ -17,7 +17,7 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  static DatabaseConnection _openConnection() {
-    return driftDatabase(name: 'app_database') as DatabaseConnection;
+  static QueryExecutor _openConnection() {
+    return driftDatabase(name: 'app_database');
   }
 }
