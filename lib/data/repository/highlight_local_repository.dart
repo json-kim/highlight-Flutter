@@ -84,4 +84,16 @@ class HighlightLocalRepository implements HighlightRepository {
   Future<List<String>> _saveMultiImage(List<XFile> photos) async {
     return await Future.wait(photos.map((e) => imageDataSource.saveImage(e)));
   }
+
+  @override
+  Future<HighlightApiResult<void>> deleteHighlight(String highlightId) async {
+    try {
+      await highlightsDao.deleteHighlight(highlightId);
+
+      return HighlightApiResult.success(null);
+    } catch (e, s) {
+      return HighlightApiResult.fail(HighlightException(
+          message: HighlightException.saveRequestFail, trace: s));
+    }
+  }
 }

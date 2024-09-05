@@ -11,4 +11,5 @@ abstract interface class HighlightRepository {
       {String? cursorId});
   Future<HighlightApiResult<HighlightModel>> retrieveHighlight(
       String highlightId);
+  Future<HighlightApiResult<void>> deleteHighlight(String highlightId);
 }
