@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/screen/common/confirm_dialog.dart';
 import 'package:highlight_flutter/screen/common/fail_widget.dart';
 import 'package:highlight_flutter/screen/common/state/platform_share_provider.dart';
 import 'package:highlight_flutter/screen/highlight_detail/color_bar.dart';
@@ -31,6 +32,11 @@ class HighlightDetailScreen extends ConsumerWidget {
         name: 'highlight_share_${DateTime.now().toIso8601String()}');
   }
 
+  Future<void> onDelete(BuildContext context) async {
+    final checkDelete =
+        await showConfirmtDialog(context, '정말 삭제하시겠습니까?', '취소', '삭제');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -40,7 +46,7 @@ class HighlightDetailScreen extends ConsumerWidget {
             onShare: () => _captureDetail().then((value) =>
                 ref.watch(platformShareProvider.notifier).shareImage([value])),
           ),
-          DeleteButton(onDelete: () {}),
+          DeleteButton(onDelete: () => onDelete(context)),
         ],
       ),
       body: RepaintBoundary(
