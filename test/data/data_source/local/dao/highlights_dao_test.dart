@@ -123,6 +123,30 @@ void main() {
     expect(savedCount, testCount);
   });
 
+  test('delete Highlight', () async {
+    final highlightsDao = HighlightsDao(database);
+
+    final testId = 'testId';
+    await highlightsDao
+        .into(highlightsDao.highlightsTable)
+        .insert(makeTestHighlightCompanion(id: testId));
+
+    final savedResult =
+        await (highlightsDao.select(highlightsDao.highlightsTable)
+              ..where((tbl) => tbl.id.equals(testId)))
+            .getSingleOrNull();
+
+    expect(savedResult?.id, testId);
+
+    await highlightsDao.deleteHighlight(testId);
+
+    final savedResultAfterDelete =
+        await (highlightsDao.select(highlightsDao.highlightsTable)
+              ..where((tbl) => tbl.id.equals(testId)))
+            .getSingleOrNull();
+    expect(savedResultAfterDelete, null);
+  });
+
   tearDownAll(() {
     database.close();
   });
