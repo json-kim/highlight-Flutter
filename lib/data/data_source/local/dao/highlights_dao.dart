@@ -170,4 +170,13 @@ class HighlightsDao extends DatabaseAccessor<AppDatabase>
 
     return HighlightModel.fromJson(highlightJson);
   }
+
+  DeleteStatement _makeDeleteQuery(String highlightId) {
+    return delete<$HighlightsTableTable, HighlightsTableData>(highlightsTable)
+      ..where((tbl) => tbl.id.equals(highlightId));
+  }
+
+  Future<int> deleteHighlight(String highlightId) {
+    return _makeDeleteQuery(highlightId).go();
+  }
 }
