@@ -6,6 +6,7 @@ import 'package:highlight_flutter/screen/common/text_dialog.dart';
 import 'package:highlight_flutter/screen/highlight_edit/color_select_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/content_field_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/date_select_bar.dart';
+import 'package:highlight_flutter/screen/highlight_edit/edit_success_dialog.dart';
 import 'package:highlight_flutter/screen/highlight_edit/photo_picker_bar.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/highlight_save_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/save_valid_provider.dart';
@@ -18,24 +19,35 @@ class HighlightEditScreen extends ConsumerWidget {
     context.go('/${Routes.list}');
   }
 
+  Future<void> _showSuccessDialog(BuildContext context) {
+    return showDialog(
+        context: context, builder: (context) => const EditSuccessDialog());
+  }
+
+  Future<void> _onSaveStateChanged(
+      BuildContext context, SaveState state) async {
+    switch (state) {
+      case SaveNotReady():
+        showTextDialog(context, state.toString());
+        break;
+      case SaveSuccess():
+        await _showSuccessDialog(context);
+        if (context.mounted) {
+          backToList(context);
+        }
+        break;
+      case SaveFail():
+        showTextDialog(context, state.toString());
+        break;
+      case _:
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen(
       highlightSaveProvider,
-      (previous, next) {
-        switch (next) {
-          case SaveNotReady():
-            showTextDialog(context, next.toString());
-            break;
-          case SaveSuccess():
-            backToList(context);
-            break;
-          case SaveFail():
-            showTextDialog(context, next.toString());
-            break;
-          case _:
-        }
-      },
+      (previous, next) => _onSaveStateChanged(context, next),
     );
 
     return Scaffold(
