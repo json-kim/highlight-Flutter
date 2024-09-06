@@ -9,6 +9,9 @@ import 'package:highlight_flutter/screen/highlight_edit/state/current_picked_pho
 import 'package:highlight_flutter/screen/highlight_edit/state/current_title_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/selected_color_provider.dart';
 import 'package:highlight_flutter/screen/highlight_edit/state/selected_date_provider.dart';
+import 'package:highlight_flutter/screen/highlight_list/state/highlight_list_provider.dart';
+import 'package:highlight_flutter/screen/photo_grid/state/photo_thumbnail_list_provider.dart';
+import 'package:highlight_flutter/screen/profile/state/highlight_count_provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 final highlightSaveProvider =
@@ -46,7 +49,10 @@ class HighlightSave extends AutoDisposeNotifier<SaveState> {
     final request = SaveRequest.fromInputData(currentData);
     state = request;
     state = await requestSaveHighlight(request);
-    return;
+
+    if (state is SaveSuccess) {
+      _applSavedChange((state as SaveSuccess).savedModel);
+    }
   }
 
   InputData readCurrentData() {
@@ -74,6 +80,38 @@ class HighlightSave extends AutoDisposeNotifier<SaveState> {
       ApiSuccess() => SaveSuccess(savedModel: result.data),
       ApiFail() => SaveFail(failReason: result.exception.message.toString())
     };
+  }
+
+  void _applSavedChange(HighlightModel highlight) {
+    if (ref.exists(highlightListProvider)) {
+      _changeHighlightListData(highlight);
+    }
+
+    if (ref.exists(photoThumbnailListProvider)) {
+      _changePhotoListData(highlight);
+    }
+
+    if (ref.exists(highlightCountProvider)) {
+      _changeHighlightCountData();
+    }
+  }
+
+  void _changeHighlightListData(HighlightModel highlight) {
+    ref.watch(highlightListProvider.notifier).addNewHighlight(highlight);
+  }
+
+  void _changePhotoListData(HighlightModel highlight) {
+    final thumbnail = highlight.extractPhotoThumbnail();
+
+    if (thumbnail == null) return;
+
+    ref
+        .watch(photoThumbnailListProvider.notifier)
+        .addNewPhotoThumbnail(thumbnail);
+  }
+
+  void _changeHighlightCountData() {
+    ref.watch(highlightCountProvider.notifier).loadCount();
   }
 }
 
