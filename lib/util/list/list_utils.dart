@@ -1,13 +1,17 @@
+List<T> addElementFirst<T>(List<T> list, T element) {
+  return [element, ...list];
+}
+
+List<T> addElementsFirst<T>(List<T> list, List<T> elements) {
+  return [...elements, ...list];
+}
+
 List<T> addElementLast<T>(List<T> list, T element) {
-  final newList = [...list];
-  newList.add(element);
-  return newList;
+  return [...list, element];
 }
 
 List<T> addElementsLast<T>(List<T> list, List<T> elements) {
-  final newList = [...list];
-  newList.addAll(elements);
-  return newList;
+  return [...list, ...elements];
 }
 
 List<T> removeElement<T>(List<T> list, T element) {
