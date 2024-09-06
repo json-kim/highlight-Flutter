@@ -14,8 +14,15 @@ void main() {
   test('insert Highlight / select Highlight with rowId', () async {
     final highlightsDao = HighlightsDao(database);
     final inputHighlightModel = makeTestHighlightModel();
+    final input = (
+      title: inputHighlightModel.title,
+      content: inputHighlightModel.content,
+      date: inputHighlightModel.date,
+      color: inputHighlightModel.color,
+      photos: inputHighlightModel.photos,
+    );
 
-    final rowId = await highlightsDao.insertHighlight(inputHighlightModel);
+    final rowId = await highlightsDao.insertHighlight(input);
     final resultHighlightModel =
         await highlightsDao.selectHighlightWithRowId(rowId);
 
@@ -47,8 +54,8 @@ void main() {
     final highlightTestModel2 = makeTestHighlightModel(title: '테스트 2');
 
     await Future.wait([
-      highlightsDao.insertHighlight(highlightTestModel1),
-      highlightsDao.insertHighlight(highlightTestModel2),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel1)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel2)),
     ]);
 
     final highlights = await highlightsDao.selectHighlights(DateTime.now());
@@ -73,12 +80,12 @@ void main() {
         makeTestHighlightModel(title: '테스트 6', date: DateTime(2022, 9, 6));
 
     await Future.wait([
-      highlightsDao.insertHighlight(highlightTestModel1),
-      highlightsDao.insertHighlight(highlightTestModel2),
-      highlightsDao.insertHighlight(highlightTestModel3),
-      highlightsDao.insertHighlight(highlightTestModel4),
-      highlightsDao.insertHighlight(highlightTestModel5),
-      highlightsDao.insertHighlight(highlightTestModel6),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel1)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel2)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel3)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel4)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel5)),
+      highlightsDao.insertHighlight(convertToInputData(highlightTestModel6)),
     ]);
 
     final highlights =
@@ -116,7 +123,8 @@ void main() {
     final highlights = List.generate(
         testCount, (index) => makeTestHighlightModel(title: '제목$index'));
 
-    await Future.wait(highlights.map((e) => highlightsDao.insertHighlight(e)));
+    await Future.wait(highlights
+        .map((e) => highlightsDao.insertHighlight(convertToInputData(e))));
 
     final savedCount = await highlightsDao.selectCountHighlights();
 

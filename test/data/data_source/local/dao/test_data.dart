@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:highlight_flutter/domain/repository/highlight_repository.dart';
 import 'package:test/test.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,16 @@ HighlightModel makeTestHighlightModel(
       date: date ?? DateTime.now(),
       color: color,
       photos: photos ?? [XFile('test1.png,'), XFile('test2.png,')]);
+}
+
+HighlightInputData convertToInputData(HighlightModel model) {
+  return (
+    title: model.title,
+    content: model.content,
+    date: model.date,
+    color: model.color,
+    photos: model.photos,
+  );
 }
 
 HighlightsTableCompanion makeTestHighlightCompanion(
