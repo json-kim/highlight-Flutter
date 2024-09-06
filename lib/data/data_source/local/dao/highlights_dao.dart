@@ -6,6 +6,7 @@ import 'package:highlight_flutter/data/data_source/local/database/app_database.d
 import 'package:highlight_flutter/data/data_source/local/table/highlights_table.dart';
 import 'package:highlight_flutter/data/data_source/local/table/photos_table.dart';
 import 'package:highlight_flutter/domain/model/highlight_model.dart';
+import 'package:highlight_flutter/domain/repository/highlight_repository.dart';
 
 part 'highlights_dao.g.dart';
 
@@ -14,18 +15,18 @@ class HighlightsDao extends DatabaseAccessor<AppDatabase>
     with _$HighlightsDaoMixin {
   HighlightsDao(super.attachedDatabase);
 
-  Future<int> insertHighlight(HighlightModel highlight) async {
+  Future<int> insertHighlight(HighlightInputData highlight) {
     return into(highlightsTable)
         .insert(_makeHighlightTableCompanion(highlight));
   }
 
   HighlightsTableCompanion _makeHighlightTableCompanion(
-      HighlightModel highlight) {
+      HighlightInputData input) {
     return HighlightsTableCompanion.insert(
-        title: highlight.title,
-        content: highlight.content,
-        color: highlight.color.value,
-        date: highlight.date);
+        title: input.title,
+        content: input.content,
+        color: input.color.value,
+        date: input.date);
   }
 
   SimpleSelectStatement<$HighlightsTableTable, HighlightsTableData>

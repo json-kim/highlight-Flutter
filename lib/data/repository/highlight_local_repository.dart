@@ -1,3 +1,4 @@
+import 'package:highlight_flutter/const/highlight/highlight_data.dart';
 import 'package:highlight_flutter/data/data_source/local/dao/highlights_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/dao/photos_dao.dart';
 import 'package:highlight_flutter/data/data_source/local/image_file/image_file_local_data_source.dart';
@@ -63,18 +64,28 @@ class HighlightLocalRepository implements HighlightRepository {
   }
 
   @override
-  Future<HighlightApiResult<void>> saveHighlight(
-      HighlightModel highlight) async {
+  Future<HighlightApiResult<HighlightModel>> saveHighlight(
+      HighlightInputData highlightInput) async {
     try {
-      final rowId = await highlightsDao.insertHighlight(highlight);
+      final rowId = await highlightsDao.insertHighlight(highlightInput);
 
       final highlightId = await highlightsDao.selectHighlightId(rowId);
 
-      if (highlightId == null) return ApiResult.success(null);
-      final newPaths = await _saveMultiImage(highlight.photos);
+      if (highlightId == null) {
+        return ApiResult.fail(
+            HighlightException(message: HighlightException.saveRequestFail));
+      }
+      final newPaths = await _saveMultiImage(highlightInput.photos);
       await photosDao.insertMultiplePhotos(newPaths, highlightId);
 
-      return ApiResult.success(null);
+      final savedResult = await highlightsDao.selectHighlight(highlightId);
+
+      if (savedResult == null) {
+        return ApiResult.fail(
+            HighlightException(message: HighlightException.saveRequestFail));
+      }
+
+      return ApiResult.success(savedResult);
     } catch (e, t) {
       return ApiResult.fail(HighlightException(
           message: HighlightException.saveRequestFail, trace: t));
