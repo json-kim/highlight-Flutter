@@ -2,6 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:highlight_flutter/domain/repository/repository_provider.dart';
 import 'package:highlight_flutter/domain/repository/result/api_result.dart';
 import 'package:highlight_flutter/screen/highlight_detail/state/detail_highlight_id_provider.dart';
+import 'package:highlight_flutter/screen/highlight_list/state/highlight_list_provider.dart';
+import 'package:highlight_flutter/screen/photo_grid/state/photo_thumbnail_list_provider.dart';
+import 'package:highlight_flutter/screen/profile/state/highlight_count_provider.dart';
 
 final deleteHighlightProvider =
     NotifierProvider.autoDispose<DeleteHighlight, DeleteState>(
@@ -19,7 +22,9 @@ class DeleteHighlight extends AutoDisposeNotifier<DeleteState> {
     if (!_isValidateDelete(state)) return;
 
     state = Deleteing();
-    state = await _deleteRequest(_readHighlightId());
+    final highlightId = _readHighlightId();
+    state = await _deleteRequest(highlightId);
+    _applyDeletedChange(highlightId);
   }
 
   bool _isValidateDelete(DeleteState state) {
@@ -40,6 +45,34 @@ class DeleteHighlight extends AutoDisposeNotifier<DeleteState> {
       ApiSuccess() => DeleteDone(),
       ApiFail() => DeleteFail(failReason: result.exception.message.toString()),
     };
+  }
+
+  void _applyDeletedChange(String highlightId) {
+    if (ref.exists(highlightListProvider)) {
+      _changeHighlightListData(highlightId);
+    }
+
+    if (ref.exists(photoThumbnailListProvider)) {
+      _changePhotoListData(highlightId);
+    }
+
+    if (ref.exists(highlightCountProvider)) {
+      _changeHighlightCountData();
+    }
+  }
+
+  void _changeHighlightListData(String highlightId) {
+    ref.watch(highlightListProvider.notifier).removeHighlight(highlightId);
+  }
+
+  void _changePhotoListData(String highlightId) {
+    ref
+        .watch(photoThumbnailListProvider.notifier)
+        .removePhotoThumbnail(highlightId);
+  }
+
+  void _changeHighlightCountData() {
+    ref.watch(highlightCountProvider.notifier).loadCount();
   }
 }
 

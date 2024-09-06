@@ -3,6 +3,7 @@ import 'package:highlight_flutter/domain/model/photo_thumbnail_model.dart';
 import 'package:highlight_flutter/domain/repository/repository_provider.dart';
 import 'package:highlight_flutter/domain/repository/result/api_result.dart';
 import 'package:highlight_flutter/util/list/list_utils.dart';
+import 'package:collection/collection.dart';
 
 final photoThumbnailListProvider =
     NotifierProvider.autoDispose<PhotoThumbnailList, List<PhotoThumbnailModel>>(
@@ -46,5 +47,16 @@ class PhotoThumbnailList
 
   bool checkEndPage(List<PhotoThumbnailModel> list) {
     return list.isEmpty;
+  }
+
+  void removePhotoThumbnail(String highlightId) {
+    final thumbnail = _findThumbnail(highlightId);
+    if (thumbnail == null) return;
+
+    state = removeElement(state, thumbnail);
+  }
+
+  PhotoThumbnailModel? _findThumbnail(String highlightId) {
+    return state.firstWhereOrNull((e) => e.highlightId == highlightId);
   }
 }

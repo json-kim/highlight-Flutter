@@ -3,6 +3,7 @@ import 'package:highlight_flutter/domain/model/highlight_model.dart';
 import 'package:highlight_flutter/domain/repository/repository_provider.dart';
 import 'package:highlight_flutter/domain/repository/result/api_result.dart';
 import 'package:highlight_flutter/util/list/list_utils.dart';
+import 'package:collection/collection.dart';
 
 final highlightListProvider =
     NotifierProvider.autoDispose<HighlightListProvider, List<HighlightModel>>(
@@ -45,5 +46,16 @@ class HighlightListProvider extends AutoDisposeNotifier<List<HighlightModel>> {
 
   bool checkEndPage(List<HighlightModel> list) {
     return list.isEmpty;
+  }
+
+  void removeHighlight(String highlightId) {
+    final highlight = _findHighlight(highlightId);
+    if (highlight == null) return;
+
+    state = removeElement(state, highlight);
+  }
+
+  HighlightModel? _findHighlight(String highlightId) {
+    return state.firstWhereOrNull((e) => e.id == highlightId);
   }
 }

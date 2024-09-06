@@ -4,9 +4,11 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:highlight_flutter/screen/common/confirm_dialog.dart';
 import 'package:highlight_flutter/screen/common/fail_widget.dart';
 import 'package:highlight_flutter/screen/common/state/platform_share_provider.dart';
+import 'package:highlight_flutter/screen/common/text_dialog.dart';
 import 'package:highlight_flutter/screen/highlight_detail/color_bar.dart';
 import 'package:highlight_flutter/screen/highlight_detail/content_text_bar.dart';
 import 'package:highlight_flutter/screen/highlight_detail/date_bar.dart';
@@ -37,8 +39,30 @@ class HighlightDetailScreen extends ConsumerWidget {
     return showConfirmtDialog(context, '정말 삭제하시겠습니까?', '취소', '삭제');
   }
 
+  Future<void> _onDeleteStateChanged(
+      BuildContext context, DeleteState state) async {
+    switch (state) {
+      case DeleteDone():
+        await showTextDialog(context, '삭제되었습니다');
+        if (context.mounted) {
+          backToPreviousPage(context);
+        }
+        break;
+      case DeleteFail():
+        showTextDialog(context, state.failReason);
+      default:
+        break;
+    }
+  }
+
+  void backToPreviousPage(BuildContext context) {
+    context.pop();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(deleteHighlightProvider,
+        (previous, next) => _onDeleteStateChanged(context, next));
     return Scaffold(
       appBar: AppBar(
         actions: [
