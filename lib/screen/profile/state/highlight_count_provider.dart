@@ -12,11 +12,11 @@ final highlightCountProvider =
 class HighlightCountProvider extends AutoDisposeAsyncNotifier<int> {
   @override
   FutureOr<int> build() {
-    return loadCount();
+    return _requestCount();
   }
 
-  Future<int> loadCount() {
-    return _requestCount();
+  Future<void> loadCount() async {
+    state = AsyncValue.data(await _requestCount());
   }
 
   Future<int> _requestCount() async {
