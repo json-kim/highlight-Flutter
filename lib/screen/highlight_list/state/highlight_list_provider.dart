@@ -58,4 +58,8 @@ class HighlightListProvider extends AutoDisposeNotifier<List<HighlightModel>> {
   HighlightModel? _findHighlight(String highlightId) {
     return state.firstWhereOrNull((e) => e.id == highlightId);
   }
+
+  void addNewHighlight(HighlightModel highlight) {
+    state = addElementFirst(state, highlight);
+  }
 }

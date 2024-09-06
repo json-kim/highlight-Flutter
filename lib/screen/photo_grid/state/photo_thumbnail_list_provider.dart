@@ -59,4 +59,8 @@ class PhotoThumbnailList
   PhotoThumbnailModel? _findThumbnail(String highlightId) {
     return state.firstWhereOrNull((e) => e.highlightId == highlightId);
   }
+
+  void addNewPhotoThumbnail(PhotoThumbnailModel thumbnail) {
+    state = addElementFirst(state, thumbnail);
+  }
 }
