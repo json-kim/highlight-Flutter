@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:highlight_flutter/domain/repository/highlight_repository.dart';
 import 'package:highlight_flutter/domain/repository/repository_provider.dart';
 import 'package:highlight_flutter/domain/model/highlight_model.dart';
 import 'package:highlight_flutter/domain/repository/result/api_result.dart';
@@ -67,10 +68,10 @@ class HighlightSave extends AutoDisposeNotifier<SaveState> {
   Future<SaveState> requestSaveHighlight(SaveRequest request) async {
     final result = await ref
         .watch(highlightRepositoryProvider)
-        .saveHighlight(request.toModel());
+        .saveHighlight(request.toInputData());
 
     return switch (result) {
-      ApiSuccess() => SaveSuccess(),
+      ApiSuccess() => SaveSuccess(savedModel: result.data),
       ApiFail() => SaveFail(failReason: result.exception.message.toString())
     };
   }
@@ -116,16 +117,20 @@ class SaveRequest extends SaveState {
       color: data.color,
       photos: data.photos);
 
-  HighlightModel toModel() => HighlightModel(
-      id: 'tempId',
-      title: title,
-      content: content,
-      date: date,
-      color: color,
-      photos: photos);
+  HighlightInputData toInputData() => (
+        title: title,
+        content: content,
+        date: date,
+        color: color,
+        photos: photos
+      );
 }
 
-class SaveSuccess extends SaveState {}
+class SaveSuccess extends SaveState {
+  SaveSuccess({required this.savedModel});
+
+  final HighlightModel savedModel;
+}
 
 class SaveFail extends SaveState {
   SaveFail({required this.failReason});
