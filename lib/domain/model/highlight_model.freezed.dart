@@ -165,7 +165,7 @@ class __$$HighlightModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$HighlightModelImpl implements _HighlightModel {
+class _$HighlightModelImpl extends _HighlightModel {
   const _$HighlightModelImpl(
       {required this.id,
       required this.title,
@@ -173,7 +173,8 @@ class _$HighlightModelImpl implements _HighlightModel {
       required this.date,
       @ColorConverter() required this.color,
       @XFileConverter() final List<XFile> photos = const []})
-      : _photos = photos;
+      : _photos = photos,
+        super._();
 
   factory _$HighlightModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HighlightModelImplFromJson(json);
@@ -237,7 +238,7 @@ class _$HighlightModelImpl implements _HighlightModel {
   }
 }
 
-abstract class _HighlightModel implements HighlightModel {
+abstract class _HighlightModel extends HighlightModel {
   const factory _HighlightModel(
       {required final String id,
       required final String title,
@@ -245,6 +246,7 @@ abstract class _HighlightModel implements HighlightModel {
       required final DateTime date,
       @ColorConverter() required final Color color,
       @XFileConverter() final List<XFile> photos}) = _$HighlightModelImpl;
+  const _HighlightModel._() : super._();
 
   factory _HighlightModel.fromJson(Map<String, dynamic> json) =
       _$HighlightModelImpl.fromJson;
