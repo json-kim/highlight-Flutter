@@ -11,6 +11,7 @@ import 'package:highlight_flutter/screen/highlight_detail/color_bar.dart';
 import 'package:highlight_flutter/screen/highlight_detail/content_text_bar.dart';
 import 'package:highlight_flutter/screen/highlight_detail/date_bar.dart';
 import 'package:highlight_flutter/screen/highlight_detail/photo_list_bar.dart';
+import 'package:highlight_flutter/screen/highlight_detail/state/delete_highlight_provider.dart';
 import 'package:highlight_flutter/screen/highlight_detail/state/detail_highlight_provider.dart';
 import 'package:highlight_flutter/screen/highlight_detail/title_text_bar.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,9 +33,8 @@ class HighlightDetailScreen extends ConsumerWidget {
         name: 'highlight_share_${DateTime.now().toIso8601String()}');
   }
 
-  Future<void> onDelete(BuildContext context) async {
-    final checkDelete =
-        await showConfirmtDialog(context, '정말 삭제하시겠습니까?', '취소', '삭제');
+  Future<bool> checkDelete(BuildContext context) {
+    return showConfirmtDialog(context, '정말 삭제하시겠습니까?', '취소', '삭제');
   }
 
   @override
@@ -46,7 +46,12 @@ class HighlightDetailScreen extends ConsumerWidget {
             onShare: () => _captureDetail().then((value) =>
                 ref.watch(platformShareProvider.notifier).shareImage([value])),
           ),
-          DeleteButton(onDelete: () => onDelete(context)),
+          DeleteButton(
+              onDelete: () => checkDelete(context).then((check) => check
+                  ? ref
+                      .watch(deleteHighlightProvider.notifier)
+                      .deleteHighlight()
+                  : null)),
         ],
       ),
       body: RepaintBoundary(
